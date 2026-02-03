@@ -25,28 +25,39 @@ public class AreaProgram {
 			else
 				switch (option) {
 					case 1:
-						System.out.print("--- Area of a Square ---\nEnter the square's lenght: ");
-						double length = keyboard.nextDouble();
-						area = Math.pow(length, 2);
-						System.out.println("Square's area is: " + area);
+						showSquareDialog(keyboard);
 						break;
 					case 2:
-						System.out.print("--- Area of a Circle ---\nEnter the cirle's radius: ");
-						double radius = keyboard.nextDouble();
-						area = Math.pow(radius, 2) * Math.PI;
-						System.out.println("Circle's area is: " + area);
+						showCircleDialog(keyboard);
 						break;
 					case 3:
-						System.out.print("--- Area of a Triangle ---\nEnter the triangle's base: ");
-						double base = keyboard.nextDouble();
-						System.out.print(
-								"--- Area of a Triangle ---\nEnter the triangle's height measure: ");
-						double height = keyboard.nextDouble();
-						area = base * height / 2.0;
-						System.out.println("Triangles's area is: " + area);
+						showTriangleDialog(keyboard);
 						break;
-				}
+					}
 		} while (option != 4);
 		keyboard.close();
+	}
+
+	static void showCircleDialog(Scanner inputScanner) {
+		System.out.print("--- Area of a Circle ---\nEnter the cirle's radius: ");
+		double radius = inputScanner.nextDouble();
+		double area = Math.pow(radius, 2) * Math.PI;
+		System.out.println("Circle's area is: " + area);
+	}
+
+	static void showSquareDialog(Scanner inputScanner) {
+		System.out.print("--- Area of a Square ---\nEnter the square's lenght: ");
+		double length = inputScanner.nextDouble();
+		double area = Math.pow(length, 2);
+		System.out.println("Square's area is: " + area);
+	}
+	static void showTriangleDialog(Scanner inputScanner) {
+		System.out.print("--- Area of a Triangle ---\nEnter the triangle's base: ");
+		double base = inputScanner.nextDouble();
+		System.out.print(
+				"--- Area of a Triangle ---\nEnter the triangle's height measure: ");
+		double height = inputScanner.nextDouble();
+		double area = base * height / 2.0;
+		System.out.println("Triangles's area is: " + area);
 	}
 }

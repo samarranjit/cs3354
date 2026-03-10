@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Implementation of {@link BoardLoader} that reads level definitions from a
+ * simple comma-separated value (CSV) text file.
+ */
 public class CSVBoardLoader implements BoardLoader {
 
 	@Override

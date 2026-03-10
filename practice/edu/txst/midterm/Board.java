@@ -1,10 +1,18 @@
 package edu.txst.midterm;
 
+/**
+ * Represents a fixed-size grid of integer cell values used by the Sokoban
+ * game. Each cell stores a code that identifies what is present at that
+ * location (floor, wall, box, goal, etc.).
+ */
 public class Board implements Cloneable {
 	private final int COLUMNS = 10;
 	private final int ROWS = 5;
 	private Integer[][] grid;
 
+	/**
+	 * Creates an empty board with all cells initialized to {@code null}.
+	 */
 	public Board() {
 		this.grid = new Integer[ROWS][COLUMNS];
 	}

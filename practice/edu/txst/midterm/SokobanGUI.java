@@ -1,11 +1,25 @@
 package edu.txst.midterm;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+/**
+ * Simple Swing based user interface for the 16-bit Sokoban game. This class
+ * is responsible for loading levels, handling keyboard input, and displaying
+ * the current board.
+ */
 public class SokobanGUI extends JFrame {
 	private Board originalBoard;
 	private Board currentBoard;
@@ -14,6 +28,10 @@ public class SokobanGUI extends JFrame {
 	private JMenuItem resetItem;
 	private int stepCounter;
 
+	/**
+	 * Creates the Sokoban graphical user interface and initializes menu and
+	 * keyboard handling.
+	 */
 	public SokobanGUI() {
 		setTitle("16-Bit Sokoban");
 		setSize(640, 480); // Adjusted for 10x5 grid with scaling
@@ -32,11 +50,15 @@ public class SokobanGUI extends JFrame {
 				if (engine == null)
 					return;
 
+				boolean moved = false;
 				switch (e.getKeyCode()) {
-					case KeyEvent.VK_UP -> engine.movePlayer(-1, 0);
-					case KeyEvent.VK_DOWN -> engine.movePlayer(1, 0);
-					case KeyEvent.VK_LEFT -> engine.movePlayer(0, -1);
-					case KeyEvent.VK_RIGHT -> engine.movePlayer(0, 1);
+					case KeyEvent.VK_UP -> moved = engine.movePlayer(-1, 0);
+					case KeyEvent.VK_DOWN -> moved = engine.movePlayer(1, 0);
+					case KeyEvent.VK_LEFT -> moved = engine.movePlayer(0, -1);
+					case KeyEvent.VK_RIGHT -> moved = engine.movePlayer(0, 1);
+				}
+				if (moved) {
+					stepCounter++;
 				}
 				gamePanel.repaint();
 
@@ -61,6 +83,9 @@ public class SokobanGUI extends JFrame {
 		});
 	}
 
+	/**
+	 * Initializes the menu bar and game menu actions.
+	 */
 	private void initMenu() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu gameMenu = new JMenu("Game");
@@ -78,6 +103,9 @@ public class SokobanGUI extends JFrame {
 		setJMenuBar(menuBar);
 	}
 
+	/**
+	 * Opens a CSV file selected by the user and loads it as a new level.
+	 */
 	private void openFile() {
 		JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
 		int result = fileChooser.showOpenDialog(this);
@@ -90,6 +118,7 @@ public class SokobanGUI extends JFrame {
 			originalBoard = loader.load(selectedFile.getAbsolutePath());
 			currentBoard = originalBoard.clone();
 			engine = new GameEngine(currentBoard);
+			stepCounter = 0;
 
 			resetItem.setEnabled(true);
 			gamePanel.setBoard(currentBoard);
@@ -97,24 +126,41 @@ public class SokobanGUI extends JFrame {
 		}
 	}
 
+	/**
+	 * Resets the current level to its original state.
+	 */
 	private void resetGame() {
 		if (originalBoard != null) {
 			currentBoard = originalBoard.clone();
 			engine = new GameEngine(currentBoard);
+			stepCounter = 0;
 			gamePanel.setBoard(currentBoard);
 			gamePanel.repaint();
 		}
 	}
 
 	// Inner class for custom rendering
+	/**
+	 * Inner panel responsible for drawing the current state of the board.
+	 */
 	private class GamePanel extends JPanel {
 		private Board board;
 		private final int TILE_SIZE = 64; // Scale up for visibility
 
+		/**
+		 * Sets the board that this panel should render.
+		 * 
+		 * @param board the board to render
+		 */
 		public void setBoard(Board board) {
 			this.board = board;
 		}
 
+		/**
+		 * Paints the current board state by drawing every tile in the 5x10 grid.
+		 * 
+		 * @param g graphics context used for rendering
+		 */
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
@@ -129,6 +175,14 @@ public class SokobanGUI extends JFrame {
 			}
 		}
 
+		/**
+		 * Draws a single tile at the provided screen coordinates.
+		 * 
+		 * @param g graphics context used for rendering
+		 * @param type cell type identifier from the board
+		 * @param x tile x coordinate in pixels
+		 * @param y tile y coordinate in pixels
+		 */
 		private void drawTile(Graphics g, int type, int x, int y) {
 			// Placeholder colors until you link the sprite loading logic
 			switch (type) {
@@ -146,6 +200,11 @@ public class SokobanGUI extends JFrame {
 		}
 	}
 
+	/**
+	 * Application entry point for launching the Sokoban GUI.
+	 * 
+	 * @param args command-line arguments (unused)
+	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> new SokobanGUI().setVisible(true));
 	}
